@@ -75,14 +75,8 @@ if (project.hasProperty("signing.keyId") || isJitpackBuild()) {
     }
     publications {
       mavenJava(MavenPublication) {
-        if (isJitpackBuild()) {
-          groupId System.getenv('GROUP')
-          artifactId System.getenv('ARTIFACT')
-          version System.getenv('VERSION')
-        } else {
-          groupId "${project.group}"
-          artifactId "${project.name}"
-        }
+        groupId "${project.group}"
+        artifactId "${project.name}"
 
         artifact(allprojectsJar)
         artifact(allprojectsSourcesJar)
