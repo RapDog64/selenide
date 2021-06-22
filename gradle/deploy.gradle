@@ -40,13 +40,15 @@ task allprojectsJavadocJar(type: Jar, dependsOn: allprojectsJavadoc) {
   destinationDir file("${project.buildDir}/libs-to-upload")
 }
 
-if (project.hasProperty("signing.keyId")) {
+if (project.hasProperty("signing.keyId") || isJitpackBuild()) {
   apply plugin: 'signing'
   apply plugin: 'maven-publish'
 
-  signing {
-    afterEvaluate {
-      sign publishing.publications.mavenJava
+  if (!isJitpackBuild()) {
+    signing {
+      afterEvaluate {
+        sign publishing.publications.mavenJava
+      }
     }
   }
 
@@ -57,22 +59,30 @@ if (project.hasProperty("signing.keyId")) {
   }
 
   publishing {
-    repositories {
-      maven {
-        name 'Maven'
-        url project.version.endsWith("-SNAPSHOT") ?
-          'https://oss.sonatype.org/content/repositories/snapshots/' :
-          'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-        credentials {
-          username "$sonatypeUsername"
-          password "$sonatypePassword"
+    if (!isJitpackBuild()) {
+      repositories {
+        maven {
+          name 'Maven'
+          url project.version.endsWith("-SNAPSHOT") ?
+            'https://oss.sonatype.org/content/repositories/snapshots/' :
+            'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+          credentials {
+            username "$sonatypeUsername"
+            password "$sonatypePassword"
+          }
         }
       }
     }
     publications {
       mavenJava(MavenPublication) {
-        groupId "${project.group}"
-        artifactId "${project.name}"
+        if (isJitpackBuild()) {
+          groupId System.getenv('GROUP')
+          artifactId System.getenv('ARTIFACT')
+          version System.getenv('VERSION')
+        } else {
+          groupId "${project.group}"
+          artifactId "${project.name}"
+        }
 
         artifact(allprojectsJar)
         artifact(allprojectsSourcesJar)
@@ -136,5 +146,9 @@ if (project.hasProperty("signing.keyId")) {
       }
     }
   }
+}
+
+private boolean isJitpackBuild() {
+  return System.getenv('JITPACK') != null
 }
 
