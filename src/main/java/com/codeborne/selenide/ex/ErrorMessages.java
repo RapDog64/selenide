@@ -1,5 +1,6 @@
 package com.codeborne.selenide.ex;
 
+import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.ObjectCondition;
@@ -12,6 +13,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.substring;
 
@@ -27,7 +29,15 @@ public class ErrorMessages {
 
   @CheckReturnValue
   @Nonnull
-  static String actualValue(Condition condition, Driver driver, @Nullable WebElement element) {
+  static String actualValue(Condition condition, Driver driver, @Nullable WebElement element, List<CheckResult> actualValuesHistory) {
+    if (actualValuesHistory.size() == 1) {
+      return String.format("%nActual value: %s", actualValuesHistory.get(0).actualValue);
+    }
+    if (!actualValuesHistory.isEmpty()) {
+      return String.format("%nActual value: %s", actualValuesHistory);
+    }
+
+    // Deprecated branch for custom condition (not migrated to CheckResult):
     if (element != null) {
       try {
         String actualValue = condition.actualValue(driver, element);

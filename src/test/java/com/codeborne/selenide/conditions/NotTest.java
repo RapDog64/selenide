@@ -1,5 +1,6 @@
 package com.codeborne.selenide.conditions;
 
+import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Driver;
 import org.junit.jupiter.api.AfterEach;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebElement;
 
+import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -53,20 +56,20 @@ class NotTest {
   void applyFalse() {
     Driver driver = mock(Driver.class);
     WebElement webElement = mock(WebElement.class);
-    when(originalCondition.apply(any(Driver.class), any(WebElement.class))).thenReturn(true);
+    when(originalCondition.check(any(Driver.class), any(WebElement.class))).thenReturn(new CheckResult(ACCEPT, "displayed"));
 
-    assertThat(notCondition.apply(driver, webElement)).isFalse();
-    verify(originalCondition).apply(driver, webElement);
+    assertThat(notCondition.check(driver, webElement)).isEqualTo(new CheckResult(CONTINUE, "displayed"));
+    verify(originalCondition).check(driver, webElement);
   }
 
   @Test
   void applyTrue() {
     Driver driver = mock(Driver.class);
     WebElement webElement = mock(WebElement.class);
-    when(originalCondition.apply(any(Driver.class), any(WebElement.class))).thenReturn(false);
+    when(originalCondition.check(any(Driver.class), any(WebElement.class))).thenReturn(new CheckResult(CONTINUE, "hidden"));
 
-    assertThat(notCondition.apply(driver, webElement)).isTrue();
-    verify(originalCondition).apply(driver, webElement);
+    assertThat(notCondition.check(driver, webElement)).isEqualTo(new CheckResult(ACCEPT, "hidden"));
+    verify(originalCondition).check(driver, webElement);
   }
 
   @Test

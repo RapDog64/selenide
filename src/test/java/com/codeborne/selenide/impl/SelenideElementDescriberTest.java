@@ -12,6 +12,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Condition.visible;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -44,7 +45,7 @@ final class SelenideElementDescriberTest {
 
     SelenideElement selenideElement = mock(SelenideElement.class);
     when(selenideElement.toWebElement()).thenReturn(webElement);
-    doThrow(new ElementShould(driver, "div", "", visible, webElement, null)).when(selenideElement).getTagName();
+    doThrow(new ElementShould(driver, "div", "", visible, emptyList(), webElement, null)).when(selenideElement).getTagName();
 
     assertThat(describe.briefly(driver, selenideElement))
       .isEqualTo("Ups, failed to described the element [caused by: StaleElementReferenceException: disappeared]");

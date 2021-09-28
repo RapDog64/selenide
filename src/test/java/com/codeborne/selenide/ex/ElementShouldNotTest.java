@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Condition.appear;
 import static java.lang.System.lineSeparator;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -15,7 +16,7 @@ final class ElementShouldNotTest {
 
   @Test
   void testToString() {
-    ElementShouldNot elementShould = new ElementShouldNot(driver, "by.name: selenide", "be ", appear,
+    ElementShouldNot elementShould = new ElementShouldNot(driver, "by.name: selenide", "be ", appear, emptyList(),
       mock(WebElement.class), new Throwable("Error message"));
     assertThat(elementShould).hasMessage("Element should not be visible {by.name: selenide}" + lineSeparator() +
       "Element: '<null displayed:false></null>'" + lineSeparator() +
