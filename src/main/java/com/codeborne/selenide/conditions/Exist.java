@@ -23,10 +23,10 @@ public class Exist extends Condition {
   public CheckResult check(Driver driver, WebElement element) {
     try {
       element.isDisplayed();
-      return new CheckResult(ACCEPT, true);
+      return new CheckResult(ACCEPT, "exists");
     }
     catch (StaleElementReferenceException e) {
-      return new CheckResult(REJECT, false);
+      return new CheckResult(REJECT, "does not exist");
     }
   }
 
