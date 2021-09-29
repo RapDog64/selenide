@@ -83,6 +83,7 @@ class SelenideElementProxy implements InvocationHandler {
     long pollingIntervalMs = getPollingIntervalMs(method, arguments);
     SelenideLog log = SelenideLogger.beginStep(webElementSource.description(), method.getName(), args);
     try {
+      webElementSource.prepareForCheck();
       Object result = dispatchAndRetry(timeoutMs, pollingIntervalMs, proxy, method, args);
       SelenideLogger.commitStep(log, PASS);
       return result;
@@ -100,6 +101,9 @@ class SelenideElementProxy implements InvocationHandler {
     catch (RuntimeException | IOException error) {
       SelenideLogger.commitStep(log, error);
       throw error;
+    }
+    finally {
+      webElementSource.resetAfterCheck();
     }
   }
 

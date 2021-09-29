@@ -10,13 +10,14 @@ import com.codeborne.selenide.ex.ElementShouldNot;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
@@ -31,6 +32,20 @@ import static java.util.Objects.requireNonNull;
 
 @ParametersAreNonnullByDefault
 public abstract class WebElementSource {
+  private static final Logger log = LoggerFactory.getLogger(WebElementSource.class);
+  private final ThreadLocal<Integer> retryCount = new ThreadLocal<>();
+  private final ThreadLocal<ArrayList<CheckResult>> actualValuesHistory = new ThreadLocal<>();
+
+  void prepareForCheck() {
+    retryCount.set(0);
+    actualValuesHistory.set(new ArrayList<>());
+  }
+
+  void resetAfterCheck() {
+    retryCount.remove();
+    actualValuesHistory.remove();
+  }
+
   @Nonnull
   private Alias alias = NONE;
 
@@ -97,17 +112,15 @@ public abstract class WebElementSource {
   public WebElement checkCondition(String prefix, Condition condition, boolean invert) {
     Condition check = invert ? not(condition) : condition;
 
-    int i = 0;
-    LinkedHashSet<CheckResult> actualValuesHistory = new LinkedHashSet<>();
     Throwable lastError = null;
     WebElement element = null;
     try {
       element = getWebElement();
-      ++i;
+      retryCount.set(1 + retryCount.get());
       CheckResult checkResult = check.check(driver(), element);
 
-      System.out.println("Try #" + i + ": value=" + checkResult.actualValue);
-      actualValuesHistory.add(checkResult);
+      log.info("Try #{}: value={}", retryCount.get(), checkResult.actualValue); // TODO remove this log
+      actualValuesHistory.get().add(checkResult);
 
       if (checkResult.verdict == ACCEPT) {
         return element;
@@ -128,10 +141,12 @@ public abstract class WebElementSource {
       throw createElementNotFoundError(check, lastError);
     }
     else if (invert) {
-      throw new ElementShouldNot(driver(), description(), prefix, condition, new ArrayList<>(actualValuesHistory), element, lastError);
+      // TODO remove duplicates
+      throw new ElementShouldNot(driver(), description(), prefix, condition, actualValuesHistory.get(), element, lastError);
     }
     else {
-      throw new ElementShould(driver(), description(), prefix, condition, new ArrayList<>(actualValuesHistory), element, lastError);
+      // TODO remove duplicates
+      throw new ElementShould(driver(), description(), prefix, condition, actualValuesHistory.get(), element, lastError);
     }
   }
 
