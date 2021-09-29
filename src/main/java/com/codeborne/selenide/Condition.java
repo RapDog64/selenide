@@ -39,8 +39,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
-import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 import static com.codeborne.selenide.conditions.ConditionHelpers.merge;
 
 /**
@@ -580,7 +580,7 @@ public abstract class Condition {
    * @deprecated replace by {@link #check(Driver, WebElement)}
    */
   @Deprecated
-  public boolean apply_TODO_rename_me(Driver driver, WebElement element) {
+  public boolean apply(Driver driver, WebElement element) {
     throw new UnsupportedOperationException("Method 'apply' is deprecated. Please implement 'check' method.");
   }
 
@@ -592,12 +592,14 @@ public abstract class Condition {
    * @return ACCEPT if element matches condition, or
    * CONTINUE if element doesn't match (and re-trying should be continued), or
    * REJECT if element doesn't match (and we should stop re-trying).
+   *
+   * @since 5.26.0
    */
   @Nonnull
   @CheckReturnValue
   public CheckResult check(Driver driver, WebElement element) {
-    boolean result = apply_TODO_rename_me(driver, element);
-    return new CheckResult(result ? ACCEPT : CONTINUE, null);
+    boolean result = apply(driver, element);
+    return new CheckResult(result ? ACCEPT : REJECT, null);
   }
 
   /**

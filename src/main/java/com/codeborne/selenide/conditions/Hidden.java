@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
 
 @ParametersAreNonnullByDefault
 public class Hidden extends Condition {

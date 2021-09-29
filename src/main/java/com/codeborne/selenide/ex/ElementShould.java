@@ -21,10 +21,11 @@ public class ElementShould extends UIAssertionError {
                        Condition expectedCondition, List<CheckResult> actualValuesHistory,
                        WebElement element, @Nullable Throwable lastError) {
     super(
-      String.format("Element should %s%s {%s}%nElement: '%s'%s%n",
+      String.format("Element should %s%s {%s}%nElement: '%s'%s",
         prefix, expectedCondition, searchCriteria,
         describe.fully(driver, element),
         actualValue(expectedCondition, driver, element, actualValuesHistory)
-      ), lastError);
+      ),
+      lastError);
   }
 }

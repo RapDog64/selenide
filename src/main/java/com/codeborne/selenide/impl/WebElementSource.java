@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
 import static com.codeborne.selenide.Condition.cssValue;
 import static com.codeborne.selenide.Condition.have;
 import static com.codeborne.selenide.Condition.not;
@@ -109,7 +109,7 @@ public abstract class WebElementSource {
       System.out.println("Try #" + i + ": value=" + checkResult.actualValue);
       actualValuesHistory.add(checkResult);
 
-      if (checkResult.action == ACCEPT) {
+      if (checkResult.verdict == ACCEPT) {
         return element;
       }
     }

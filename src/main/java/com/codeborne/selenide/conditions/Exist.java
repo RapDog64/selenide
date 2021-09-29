@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
-import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 
 @ParametersAreNonnullByDefault
 public class Exist extends Condition {
@@ -26,7 +26,7 @@ public class Exist extends Condition {
       return new CheckResult(ACCEPT, true);
     }
     catch (StaleElementReferenceException e) {
-      return new CheckResult(CONTINUE, false);
+      return new CheckResult(REJECT, false);
     }
   }
 

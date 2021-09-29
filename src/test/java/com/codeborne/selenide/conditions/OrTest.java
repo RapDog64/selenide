@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
-import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -51,29 +51,29 @@ final class OrTest {
       new Or("", asList(
         new SimpleCondition(true),
         new SimpleCondition(true)
-      )).check(mock(Driver.class), mock(WebElement.class)).action
+      )).check(mock(Driver.class), mock(WebElement.class)).verdict
     ).isEqualTo(ACCEPT);
 
     assertThat(
       new Or("", asList(
         new SimpleCondition(true),
         new SimpleCondition(false)
-      )).check(mock(Driver.class), mock(WebElement.class)).action
+      )).check(mock(Driver.class), mock(WebElement.class)).verdict
     ).isEqualTo(ACCEPT);
 
     assertThat(
       new Or("", asList(
         new SimpleCondition(false),
         new SimpleCondition(true)
-      )).check(mock(Driver.class), mock(WebElement.class)).action
+      )).check(mock(Driver.class), mock(WebElement.class)).verdict
     ).isEqualTo(ACCEPT);
 
     assertThat(
       new Or("", asList(
         new SimpleCondition(false),
         new SimpleCondition(false)
-      )).check(mock(Driver.class), mock(WebElement.class)).action
-    ).isEqualTo(CONTINUE);
+      )).check(mock(Driver.class), mock(WebElement.class)).verdict
+    ).isEqualTo(REJECT);
   }
 
   @Test
@@ -82,28 +82,28 @@ final class OrTest {
       new Or("", asList(
         new SimpleCondition(true),
         new SimpleCondition(true)
-      )).negate().check(mock(Driver.class), mock(WebElement.class)).action
-    ).isEqualTo(CONTINUE);
+      )).negate().check(mock(Driver.class), mock(WebElement.class)).verdict
+    ).isEqualTo(REJECT);
 
     assertThat(
       new Or("", asList(
         new SimpleCondition(true),
         new SimpleCondition(false)
-      )).negate().check(mock(Driver.class), mock(WebElement.class)).action
-    ).isEqualTo(CONTINUE);
+      )).negate().check(mock(Driver.class), mock(WebElement.class)).verdict
+    ).isEqualTo(REJECT);
 
     assertThat(
       new Or("", asList(
         new SimpleCondition(false),
         new SimpleCondition(true)
-      )).negate().check(mock(Driver.class), mock(WebElement.class)).action
-    ).isEqualTo(CONTINUE);
+      )).negate().check(mock(Driver.class), mock(WebElement.class)).verdict
+    ).isEqualTo(REJECT);
 
     assertThat(
       new Or("", asList(
         new SimpleCondition(false),
         new SimpleCondition(false)
-      )).negate().check(mock(Driver.class), mock(WebElement.class)).action
+      )).negate().check(mock(Driver.class), mock(WebElement.class)).verdict
     ).isEqualTo(ACCEPT);
   }
 

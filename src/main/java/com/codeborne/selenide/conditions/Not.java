@@ -8,8 +8,8 @@ import org.openqa.selenium.WebElement;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
-import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 
 @ParametersAreNonnullByDefault
 public class Not extends Condition {
@@ -24,7 +24,7 @@ public class Not extends Condition {
   @Override
   public CheckResult check(Driver driver, WebElement element) {
     CheckResult check = condition.check(driver, element);
-    return new CheckResult(check.action == ACCEPT ? CONTINUE : ACCEPT, check.actualValue, check.timestamp);
+    return new CheckResult(check.verdict == ACCEPT ? REJECT : ACCEPT, check.actualValue, check.timestamp);
   }
 
   @Override

@@ -26,7 +26,7 @@ public class AttributeWithValue extends Condition {
     String attributeValue = getAttributeValue(element);
     return new CheckResult(
       expectedAttributeValue.equals(attributeValue),
-      String.format("%s=%s", attributeName, attributeValue)
+      String.format("%s=\"%s\"", attributeName, attributeValue)
     );
   }
 

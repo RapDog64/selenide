@@ -6,35 +6,35 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
-import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 
 /**
- * @since 5.25.0
+ * @since 5.26.0
  */
 public class CheckResult implements Serializable {
-  private final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss:SSS");
-  public final Action action;
+  private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss:SSS");
+  public final Verdict verdict;
   public final Object actualValue;
   public final LocalDateTime timestamp;
 
-  public CheckResult(Action action, @Nullable Object actualValue, LocalDateTime timestamp) {
-    this.action = action;
+  public CheckResult(Verdict verdict, @Nullable Object actualValue, LocalDateTime timestamp) {
+    this.verdict = verdict;
     this.actualValue = actualValue;
     this.timestamp = timestamp;
   }
 
-  public CheckResult(Action action, @Nullable Object actualValue) {
-    this(action, actualValue, LocalDateTime.now());
+  public CheckResult(Verdict verdict, @Nullable Object actualValue) {
+    this(verdict, actualValue, LocalDateTime.now());
   }
 
   public CheckResult(boolean checkSucceeded, @Nullable Object actualValue) {
-    this(checkSucceeded ? ACCEPT : CONTINUE, actualValue);
+    this(checkSucceeded ? ACCEPT : REJECT, actualValue);
   }
 
-  public enum Action {
+  public enum Verdict {
     ACCEPT,
-    CONTINUE
+    REJECT
   }
 
   @Override
@@ -48,11 +48,11 @@ public class CheckResult implements Serializable {
   }
 
   private boolean equals(CheckResult that) {
-    return this.action == that.action && Objects.equals(this.actualValue, that.actualValue);
+    return this.verdict == that.verdict && Objects.equals(this.actualValue, that.actualValue);
   }
 
   @Override
   public int hashCode() {
-    return 31 * action.hashCode() + (actualValue == null ? 0 : actualValue.hashCode());
+    return 31 * verdict.hashCode() + (actualValue == null ? 0 : actualValue.hashCode());
   }
 }

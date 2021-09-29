@@ -10,8 +10,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
-import static com.codeborne.selenide.CheckResult.Action.CONTINUE;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 import static java.util.stream.Collectors.joining;
 
 @ParametersAreNonnullByDefault
@@ -50,7 +50,7 @@ public class Or extends Condition {
     List<CheckResult> results = new ArrayList<>();
     for (Condition c : conditions) {
       CheckResult check = c.check(driver, element);
-      if (check.action == ACCEPT) {
+      if (check.verdict == ACCEPT) {
         return check;
       }
       else {
@@ -59,7 +59,7 @@ public class Or extends Condition {
     }
 
     String actualValues = results.stream().map(check -> String.valueOf(check.actualValue)).collect(joining(", "));
-    return new CheckResult(CONTINUE, actualValues); // TODO Does it look nice in the error message?
+    return new CheckResult(REJECT, actualValues); // TODO Does it look nice in the error message?
   }
 
   @Override

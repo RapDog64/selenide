@@ -11,7 +11,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
 import static java.util.stream.Collectors.joining;
 
 @ParametersAreNonnullByDefault
@@ -51,7 +51,7 @@ public class And extends Condition {
 
     for (Condition c : conditions) {
       CheckResult checkResult = c.check(driver, element);
-      if (checkResult.action != ACCEPT) {
+      if (checkResult.verdict != ACCEPT) {
         return checkResult;
       }
       else {

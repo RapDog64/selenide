@@ -12,7 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
-import static com.codeborne.selenide.CheckResult.Action.ACCEPT;
+import static com.codeborne.selenide.CheckResult.Verdict.ACCEPT;
 
 @ParametersAreNonnullByDefault
 public class CollectionElementByCondition extends WebElementSource {
@@ -47,7 +47,7 @@ public class CollectionElementByCondition extends WebElementSource {
     List<WebElement> list = collection.getElements();
 
     for (WebElement element : list) {
-      if (condition.check(driver(), element).action == ACCEPT) {
+      if (condition.check(driver(), element).verdict == ACCEPT) {
         return element;
       }
     }

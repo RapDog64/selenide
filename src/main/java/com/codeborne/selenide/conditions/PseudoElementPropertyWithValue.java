@@ -32,7 +32,11 @@ public class PseudoElementPropertyWithValue extends Condition {
   @Override
   public CheckResult check(Driver driver, WebElement element) {
     String value = getPseudoElementPropertyValue(driver, element);
-    return new CheckResult(defaultString(expectedPropertyValue).equalsIgnoreCase(value), value);
+    return new CheckResult(defaultString(expectedPropertyValue).equalsIgnoreCase(value), actualValue(value));
+  }
+
+  private String actualValue(String pseudoElementValue) {
+    return String.format("%s {%s: %s;}", pseudoElementName, propertyName, pseudoElementValue);
   }
 
   @Override

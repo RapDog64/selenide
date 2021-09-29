@@ -24,12 +24,12 @@ public class MatchAttributeWithValue extends Condition {
   @Override
   public CheckResult check(Driver driver, WebElement element) {
     String attributeValue = getAttributeValue(element);
-    return new CheckResult(attributeRegex.matcher(attributeValue).matches(), attributeValue);
+    return new CheckResult(attributeRegex.matcher(attributeValue).matches(), String.format("%s~/%s/", attributeName, attributeValue));
   }
 
   @Override
   public String toString() {
-    return String.format("%s %s=\"%s\"", getName(), attributeName, attributeRegex);
+    return String.format("%s %s~/%s/", getName(), attributeName, attributeRegex);
   }
 
   private String getAttributeValue(WebElement element) {

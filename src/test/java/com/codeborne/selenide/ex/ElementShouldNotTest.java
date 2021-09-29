@@ -1,13 +1,17 @@
 package com.codeborne.selenide.ex;
 
+import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.DriverStub;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
+import static com.codeborne.selenide.CheckResult.Verdict.REJECT;
 import static com.codeborne.selenide.Condition.appear;
 import static java.lang.System.lineSeparator;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -16,7 +20,8 @@ final class ElementShouldNotTest {
 
   @Test
   void testToString() {
-    ElementShouldNot elementShould = new ElementShouldNot(driver, "by.name: selenide", "be ", appear, emptyList(),
+    List<CheckResult> actualValues = singletonList(new CheckResult(REJECT, "visible:false"));
+    ElementShouldNot elementShould = new ElementShouldNot(driver, "by.name: selenide", "be ", appear, actualValues,
       mock(WebElement.class), new Throwable("Error message"));
     assertThat(elementShould).hasMessage("Element should not be visible {by.name: selenide}" + lineSeparator() +
       "Element: '<null displayed:false></null>'" + lineSeparator() +

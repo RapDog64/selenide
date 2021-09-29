@@ -38,19 +38,26 @@ public class ErrorMessages {
     }
 
     // Deprecated branch for custom condition (not migrated to CheckResult):
+    String actualValue = extractActualValue(condition, driver, element);
+    if (actualValue != null) {
+      return String.format("%nActual value: %s", actualValue);
+    }
+    return "";
+  }
+
+  @Nullable
+  @CheckReturnValue
+  private static String extractActualValue(Condition condition, Driver driver, @Nullable WebElement element) {
     if (element != null) {
       try {
-        String actualValue = condition.actualValue(driver, element);
-        if (actualValue != null) {
-          return String.format("%nActual value: %s", actualValue);
-        }
+        return condition.actualValue(driver, element);
       }
       catch (RuntimeException failedToGetValue) {
         String failedActualValue = failedToGetValue.getClass().getSimpleName() + ": " + failedToGetValue.getMessage();
-        return String.format("%nActual value: %s", substring(failedActualValue, 0, 50));
+        return substring(failedActualValue, 0, 50);
       }
     }
-    return "";
+    return null;
   }
 
   @CheckReturnValue
