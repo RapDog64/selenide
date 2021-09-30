@@ -116,7 +116,13 @@ public class ElementFinder extends WebElementSource {
   @Nonnull
   public ElementNotFound createElementNotFoundError(Condition condition, Throwable lastError) {
     if (parent != null) {
-      parent.checkCondition("", exist, false);
+      parent.prepareForCheck();
+      try {
+        parent.checkCondition("", exist, false);
+      }
+      finally {
+        parent.resetAfterCheck();
+      }
     }
 
     return super.createElementNotFoundError(condition, lastError);
